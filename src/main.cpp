@@ -47,6 +47,9 @@ RF24 radio(CE_PIN, CSN_PIN);
 
 #define LOOPLED 4
 
+#define SYNCPIN 7
+
+
 #define BUZZPIN 6
 
 #define EEPROMTASTE  5
@@ -310,7 +313,14 @@ void ppmISR()
   if (pulseLength > 3000) {
     // Sync-Pause erkannt: neues Frame beginnt
     channel = 0;
-  } else if (channel < maxChannels) {
+    digitalWrite(SYNCPIN,0);
+  } 
+  else if (channel < maxChannels) 
+  {
+   if(channel == 0)
+   {
+      digitalWrite(SYNCPIN,1);
+   }
     ppmValues[channel] = pulseLength;
     channel++;
   }
@@ -717,7 +727,8 @@ void setup()
    //eepromread();
    
    
-   pinMode(BUZZPIN,OUTPUT);
+   pinMode(SYNCPIN,OUTPUT);
+   digitalWrite(SYNCPIN,1);
    
    pinMode(LOOPLED,OUTPUT);
    
